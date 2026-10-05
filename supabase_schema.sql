@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS public.promotions (
     app2_icon TEXT NOT NULL,
     app2_devices TEXT DEFAULT '',
     app2_resolution TEXT DEFAULT '',
+    apps JSONB DEFAULT '[]'::jsonb,
     original_price TEXT NOT NULL,
     promo_price TEXT NOT NULL,
     price_period TEXT DEFAULT '',
@@ -58,6 +59,9 @@ CREATE TABLE IF NOT EXISTS public.promotions (
     created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- เพิ่มคอลัมน์ apps ในกรณีที่มีตารางอยู่เดิมแล้ว
+ALTER TABLE public.promotions ADD COLUMN IF NOT EXISTS apps JSONB DEFAULT '[]'::jsonb;
 
 -- 3. ตาราง store_settings (ตั้งค่าร้านค้า)
 CREATE TABLE IF NOT EXISTS public.store_settings (

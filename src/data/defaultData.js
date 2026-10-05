@@ -40,14 +40,20 @@ export const DEFAULT_PROMOTIONS = [
     name: 'แพ็กคู่สุดคุ้ม: iQIYI (7 วัน) + Viu Premium (7 วัน)',
     tag: '🔥 โปรคู่สุดฮิต',
     tagColor: 'rose',
-    app1Name: 'iQIYI',
-    app1Icon: '/logos/iqiyi.png',
-    app1Devices: 'ดูพร้อมกันได้ 2 อุปกรณ์',
-    app1Resolution: 'Full HD 1080p คมชัดระดับสูง',
-    app2Name: 'Viu',
-    app2Icon: '/logos/viu.png',
-    app2Devices: 'ดูได้ 3 อุปกรณ์ ( ทรส 2 / เว็บ 1 )',
-    app2Resolution: 'Full HD 1080p ไม่มีโฆษณาคั่น',
+    apps: [
+      {
+        name: 'iQIYI',
+        icon: '/logos/iqiyi.png',
+        devices: 'ดูพร้อมกันได้ 2 อุปกรณ์',
+        resolution: 'Full HD 1080p คมชัดระดับสูง'
+      },
+      {
+        name: 'Viu',
+        icon: '/logos/viu.png',
+        devices: 'ดูได้ 3 อุปกรณ์ ( ทรส 2 / เว็บ 1 )',
+        resolution: 'Full HD 1080p ไม่มีโฆษณาคั่น'
+      }
+    ],
     originalPrice: '30',
     promoPrice: '25',
     pricePeriod: '/ 7 วัน',
@@ -61,14 +67,20 @@ export const DEFAULT_PROMOTIONS = [
     name: 'แพ็กคู่บันเทิงคูณสอง: Netflix 4K + YouTube Premium (30 วัน)',
     tag: '⭐ เซฟคุ้มสุด',
     tagColor: 'amber',
-    app1Name: 'Netflix',
-    app1Icon: '/logos/netflix.png',
-    app1Devices: '1 จอ (ล็อกอินได้มือถือ / แท็บเล็ต / ทีวี)',
-    app1Resolution: 'Ultra HD 4K + ระบบเสียง Spatial Audio',
-    app2Name: 'YouTube',
-    app2Icon: '/logos/youtube.png',
-    app2Devices: 'ใช้อีเมลตัวเอง ดูได้ทุกอุปกรณ์',
-    app2Resolution: 'ไม่มีโฆษณาคั่น ฟังเพลงจอดับได้',
+    apps: [
+      {
+        name: 'Netflix',
+        icon: '/logos/netflix.png',
+        devices: '1 จอ (ล็อกอินได้มือถือ / แท็บเล็ต / ทีวี)',
+        resolution: 'Ultra HD 4K + ระบบเสียง Spatial Audio'
+      },
+      {
+        name: 'YouTube',
+        icon: '/logos/youtube.png',
+        devices: 'ใช้อีเมลตัวเอง ดูได้ทุกอุปกรณ์',
+        resolution: 'ไม่มีโฆษณาคั่น ฟังเพลงจอดับได้'
+      }
+    ],
     originalPrice: '250',
     promoPrice: '219',
     pricePeriod: '/ 30 วัน',

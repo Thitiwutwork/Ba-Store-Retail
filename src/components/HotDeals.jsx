@@ -38,6 +38,14 @@ export default function HotDeals({
         {promotions.map((promo) => {
           const discount = Number(promo.originalPrice || 0) - Number(promo.promoPrice || 0);
 
+          // Get list of apps in this promotion
+          const apps = Array.isArray(promo.apps) && promo.apps.length > 0
+            ? promo.apps
+            : [
+                { name: promo.app1Name, icon: promo.app1Icon, devices: promo.app1Devices, resolution: promo.app1Resolution },
+                { name: promo.app2Name, icon: promo.app2Icon, devices: promo.app2Devices, resolution: promo.app2Resolution }
+              ].filter(a => a.name);
+
           return (
             <div 
               key={promo.id}
@@ -83,53 +91,49 @@ export default function HotDeals({
                   {promo.name}
                 </h3>
 
-                {/* 2 Apps Visual Combo */}
-                <div className="flex items-center justify-center gap-3 py-3 px-4 rounded-2xl bg-gradient-to-r from-pink-50 via-rose-50 to-pink-50 border border-pink-100 mb-3.5">
-                  {/* App 1 */}
-                  <div className="flex flex-col items-center gap-1 w-24 text-center">
-                    <div className="w-12 h-12 rounded-xl bg-white p-1.5 shadow-sm border border-pink-100 flex items-center justify-center overflow-hidden">
-                      <img 
-                        src={promo.app1Icon || '/logos/iqiyi.png'} 
-                        alt={promo.app1Name} 
-                        className="w-full h-full object-contain"
-                        onError={(e) => { e.target.src = '/logos/iqiyi.png'; }}
-                      />
-                    </div>
-                    <span className="text-xs font-bold text-slate-700 truncate w-full">
-                      {promo.app1Name}
-                    </span>
-                  </div>
-
-                  {/* Plus Sign */}
-                  <div className="w-7 h-7 rounded-full bg-pink-200 text-pink-700 flex items-center justify-center font-bold text-base shadow-xs shrink-0">
-                    +
-                  </div>
-
-                  {/* App 2 */}
-                  <div className="flex flex-col items-center gap-1 w-24 text-center">
-                    <div className="w-12 h-12 rounded-xl bg-white p-1.5 shadow-sm border border-pink-100 flex items-center justify-center overflow-hidden">
-                      <img 
-                        src={promo.app2Icon || '/logos/viu.png'} 
-                        alt={promo.app2Name} 
-                        className="w-full h-full object-contain"
-                        onError={(e) => { e.target.src = '/logos/viu.png'; }}
-                      />
-                    </div>
-                    <span className="text-xs font-bold text-slate-700 truncate w-full">
-                      {promo.app2Name}
-                    </span>
-                  </div>
+                {/* Multi-Apps Visual Combo */}
+                <div className="flex items-center justify-center gap-2 sm:gap-3 py-3 px-3 rounded-2xl bg-gradient-to-r from-pink-50 via-rose-50 to-pink-50 border border-pink-100 mb-3.5 flex-wrap">
+                  {apps.map((appItem, appIdx) => (
+                    <React.Fragment key={appItem.id || appIdx}>
+                      <div className="flex flex-col items-center gap-1 min-w-[65px] max-w-[85px] text-center">
+                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white p-1.5 shadow-2xs border border-pink-100 flex items-center justify-center overflow-hidden">
+                          <img 
+                            src={appItem.icon || '/logos/iqiyi.png'} 
+                            alt={appItem.name} 
+                            className="w-full h-full object-contain"
+                            onError={(e) => { e.target.src = '/logos/iqiyi.png'; }}
+                          />
+                        </div>
+                        <span className="text-[11px] font-bold text-slate-700 truncate w-full" title={appItem.name}>
+                          {appItem.name}
+                        </span>
+                      </div>
+                      {appIdx < apps.length - 1 && (
+                        <div className="w-6 h-6 rounded-full bg-pink-200 text-pink-700 flex items-center justify-center font-bold text-xs shadow-2xs shrink-0">
+                          +
+                        </div>
+                      )}
+                    </React.Fragment>
+                  ))}
                 </div>
 
                 {/* Device & Spec Badges */}
-                <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 mb-3">
-                  {(promo.app1Devices || promo.devices) && (
+                <div className="space-y-1 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 mb-3">
+                  {apps.map((appItem, appIdx) => appItem.devices ? (
+                    <div key={appIdx} className="flex items-start gap-1.5">
+                      <Smartphone className="w-3.5 h-3.5 text-pink-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-slate-700 font-semibold">{appItem.name}:</strong> {appItem.devices}</span>
+                    </div>
+                  ) : null)}
+
+                  {promo.devices && !apps.some(a => a.devices) && (
                     <div className="flex items-start gap-1.5">
                       <Smartphone className="w-3.5 h-3.5 text-pink-500 shrink-0 mt-0.5" />
-                      <span>{promo.devices || `${promo.app1Name}: ${promo.app1Devices}`}</span>
+                      <span>{promo.devices}</span>
                     </div>
                   )}
-                  {(promo.app1Resolution || promo.resolution) && (
+
+                  {(promo.resolution || promo.app1Resolution) && (
                     <div className="flex items-start gap-1.5">
                       <Tv className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
                       <span>{promo.resolution || promo.app1Resolution}</span>
@@ -170,7 +174,7 @@ export default function HotDeals({
 
                 {/* Action Button */}
                 <a
-                  href={`${settings.lineUrl || `https://line.me/ti/p/~${settings.lineId?.replace('@', '')}`}?text=${encodeURIComponent(`สวัสดีค่ะ สนใจสั่งซื้อ ${promo.name} ราคา ${promo.promoPrice} บาท`)}`}
+                  href={`${settings.lineUrl || `https://line.me/ti/p/~${settings.lineId?.replace('@', '')}`}?text=${encodeURIComponent(`สวัสดีค่ะ สนใจสั่งซื้อโปรโมชั่น ${promo.name} ราคา ${promo.promoPrice} บาท`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-medium text-xs sm:text-sm shadow-xs transition-all active:scale-98 ${

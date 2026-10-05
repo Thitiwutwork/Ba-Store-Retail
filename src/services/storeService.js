@@ -61,51 +61,72 @@ const mapProductToDB = (p, idx = 0) => ({
 });
 
 // Helper: Convert database snake_case to app camelCase for Promotion
-const mapPromotionFromDB = (p) => ({
-  id: p.id,
-  name: p.name,
-  tag: p.tag || '🔥 โปรคู่สุดฮิต',
-  tagColor: p.tag_color || p.tagColor || 'rose',
-  app1Name: p.app1_name || p.app1Name || '',
-  app1Icon: p.app1_icon || p.app1Icon || '',
-  app1Devices: p.app1_devices || p.app1Devices || '',
-  app1Resolution: p.app1_resolution || p.app1Resolution || '',
-  app2Name: p.app2_name || p.app2Name || '',
-  app2Icon: p.app2_icon || p.app2Icon || '',
-  app2Devices: p.app2_devices || p.app2Devices || '',
-  app2Resolution: p.app2_resolution || p.app2Resolution || '',
-  originalPrice: p.original_price || p.originalPrice || '',
-  promoPrice: p.promo_price || p.promoPrice || '',
-  pricePeriod: p.price_period || p.pricePeriod || '',
-  devices: p.devices || '',
-  resolution: p.resolution || '',
-  packageDetails: p.package_details || p.packageDetails || '',
-  inStock: p.in_stock !== false && p.inStock !== false
-});
+const mapPromotionFromDB = (p) => {
+  let apps = Array.isArray(p.apps) && p.apps.length > 0 ? p.apps : [];
+  if (apps.length === 0 && (p.app1_name || p.app1Name)) {
+    apps = [
+      {
+        name: p.app1_name || p.app1Name || '',
+        icon: p.app1_icon || p.app1Icon || '/logos/iqiyi.png',
+        devices: p.app1_devices || p.app1Devices || '',
+        resolution: p.app1_resolution || p.app1Resolution || ''
+      },
+      {
+        name: p.app2_name || p.app2Name || '',
+        icon: p.app2_icon || p.app2Icon || '/logos/viu.png',
+        devices: p.app2_devices || p.app2Devices || '',
+        resolution: p.app2_resolution || p.app2Resolution || ''
+      }
+    ].filter(a => a.name);
+  }
+
+  return {
+    id: p.id,
+    name: p.name,
+    tag: p.tag || '🔥 โปรคู่สุดฮิต',
+    tagColor: p.tag_color || p.tagColor || 'rose',
+    apps,
+    app1Name: apps[0]?.name || p.app1_name || '',
+    app1Icon: apps[0]?.icon || p.app1_icon || '',
+    app2Name: apps[1]?.name || p.app2_name || '',
+    app2Icon: apps[1]?.icon || p.app2_icon || '',
+    originalPrice: p.original_price || p.originalPrice || '',
+    promoPrice: p.promo_price || p.promoPrice || '',
+    pricePeriod: p.price_period || p.pricePeriod || '',
+    devices: p.devices || '',
+    resolution: p.resolution || '',
+    packageDetails: p.package_details || p.packageDetails || '',
+    inStock: p.in_stock !== false && p.inStock !== false
+  };
+};
 
 // Helper: Convert app camelCase to database snake_case for Promotion
-const mapPromotionToDB = (p) => ({
-  id: p.id,
-  name: p.name,
-  tag: p.tag || '🔥 โปรคู่สุดฮิต',
-  tag_color: p.tagColor || 'rose',
-  app1_name: p.app1Name,
-  app1_icon: p.app1Icon,
-  app1_devices: p.app1Devices || '',
-  app1_resolution: p.app1Resolution || '',
-  app2_name: p.app2Name,
-  app2_icon: p.app2Icon,
-  app2_devices: p.app2Devices || '',
-  app2_resolution: p.app2Resolution || '',
-  original_price: p.originalPrice,
-  promo_price: p.promoPrice,
-  price_period: p.pricePeriod || '',
-  devices: p.devices || '',
-  resolution: p.resolution || '',
-  package_details: p.packageDetails || '',
-  in_stock: p.inStock !== false,
-  updated_at: new Date().toISOString()
-});
+const mapPromotionToDB = (p) => {
+  const apps = Array.isArray(p.apps) ? p.apps : [];
+  return {
+    id: p.id,
+    name: p.name,
+    tag: p.tag || '🔥 โปรคู่สุดฮิต',
+    tag_color: p.tagColor || 'rose',
+    apps,
+    app1_name: apps[0]?.name || p.app1Name || '',
+    app1_icon: apps[0]?.icon || p.app1Icon || '',
+    app1_devices: apps[0]?.devices || p.app1Devices || '',
+    app1_resolution: apps[0]?.resolution || p.app1Resolution || '',
+    app2_name: apps[1]?.name || p.app2Name || '',
+    app2_icon: apps[1]?.icon || p.app2Icon || '',
+    app2_devices: apps[1]?.devices || p.app2Devices || '',
+    app2_resolution: apps[1]?.resolution || p.app2Resolution || '',
+    original_price: p.originalPrice || '',
+    promo_price: p.promoPrice || '',
+    price_period: p.pricePeriod || '',
+    devices: p.devices || '',
+    resolution: p.resolution || '',
+    package_details: p.packageDetails || '',
+    in_stock: p.inStock !== false,
+    updated_at: new Date().toISOString()
+  };
+};
 
 // Helper: Map store settings
 const mapSettingsFromDB = (s) => ({
