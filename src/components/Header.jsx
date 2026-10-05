@@ -13,10 +13,10 @@ export default function Header({
     <header className="w-full">
       {/* Top Announcement Bar */}
       {settings.announcement && (
-        <div className="w-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 text-white text-xs sm:text-sm font-medium py-1.5 px-4 overflow-hidden shadow-sm">
-          <div className="flex items-center justify-center gap-2 max-w-4xl mx-auto text-center">
+        <div className="w-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 text-white text-xs sm:text-sm font-medium py-1.5 px-4 overflow-hidden shadow-sm flex items-center justify-center">
+          <div className="flex items-center justify-center gap-2 max-w-4xl mx-auto text-center overflow-hidden">
             <Sparkles className="w-4 h-4 shrink-0 animate-pulse text-yellow-200" />
-            <span className="truncate">{settings.announcement}</span>
+            <span className="truncate sm:whitespace-normal">{settings.announcement}</span>
             <Sparkles className="w-4 h-4 shrink-0 animate-pulse text-yellow-200" />
           </div>
         </div>
@@ -93,16 +93,22 @@ export default function Header({
             </div>
           </div>
 
-          {/* Contact Action Buttons (NO OTP button) */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 w-full max-w-sm">
+          {/* Contact Action Buttons & Quick Jump */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5 w-full max-w-md">
             <a 
               href={settings.lineUrl || `https://line.me/ti/p/~${settings.lineId?.replace('@', '')}`}
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white font-medium text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+              className="flex-1 min-w-[200px] inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white font-medium text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
             >
               <MessageCircle className="w-4 h-4 fill-white" />
               <span>ติดต่อสั่งซื้อทาง LINE</span>
+            </a>
+            <a
+              href="#rates"
+              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-white hover:bg-pink-50 text-pink-600 font-semibold text-sm border border-pink-200 shadow-xs hover:shadow transition-all active:scale-95 cursor-pointer"
+            >
+              <span>ดูเรทราคา ↓</span>
             </a>
           </div>
 

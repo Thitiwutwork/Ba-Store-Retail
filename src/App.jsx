@@ -245,7 +245,7 @@ export default function App() {
       />
 
       {/* 4. Rates Grid Section */}
-      <main className="w-full max-w-4xl mx-auto px-4 mt-6 flex-1">
+      <main id="rates" className="w-full max-w-4xl mx-auto px-4 mt-6 flex-1 scroll-mt-6">
         {/* Section Heading */}
         <div className="flex items-center justify-between gap-2 mb-4">
           <div className="flex items-center gap-2">

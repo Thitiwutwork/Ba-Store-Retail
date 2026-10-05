@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Upload, Image as ImageIcon, Sparkles, Check } from 'lucide-react';
+import { X, Plus, Trash2, Upload, Image as ImageIcon, Sparkles, Check, AlertCircle } from 'lucide-react';
 import { APP_LOGOS } from '../data/defaultData';
 
 export default function ProductModal({
@@ -31,6 +31,21 @@ export default function ProductModal({
 
   const [customCategory, setCustomCategory] = useState('');
   const [isCustomCategory, setIsCustomCategory] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (product) {
@@ -118,7 +133,7 @@ export default function ProductModal({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      alert('กรุณากรอกชื่อแอพ');
+      setErrorMessage('กรุณากรอกชื่อแอพพลิเคชั่น');
       return;
     }
 
@@ -137,12 +152,16 @@ export default function ProductModal({
       inStock: formData.stockStatus !== 'out_of_stock'
     };
 
+    setErrorMessage('');
     onSave(finalData);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200"
+    >
       <div className="relative w-full max-w-2xl bg-white rounded-3xl p-5 sm:p-7 shadow-2xl border border-pink-100 my-8 max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
@@ -161,6 +180,13 @@ export default function ProductModal({
             กำหนดรายละเอียด สเปก และช่วงราคาขายปลีกสำหรับแอพนี้
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="mb-4 flex items-center gap-2 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium animate-in fade-in">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* 1. App Icon Selection (Real Authentic Logos) */}

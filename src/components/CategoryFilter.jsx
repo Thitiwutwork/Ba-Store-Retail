@@ -44,10 +44,10 @@ export default function CategoryFilter({
               <button
                 key={cat}
                 onClick={() => onSelectCategory(cat)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                className={`px-4.5 py-2.5 min-h-[44px] inline-flex items-center justify-center rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-pink-500 text-white shadow-sm shadow-pink-200 scale-102'
-                    : 'bg-white text-slate-600 border border-pink-100 hover:bg-pink-50 hover:text-pink-600'
+                    ? 'bg-pink-500 text-white shadow-sm shadow-pink-200 scale-102 font-semibold'
+                    : 'bg-white text-slate-700 border border-pink-100 hover:bg-pink-50 hover:text-pink-600'
                 }`}
               >
                 {cat}

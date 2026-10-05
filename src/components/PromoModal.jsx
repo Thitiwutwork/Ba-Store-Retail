@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Check, Sparkles } from 'lucide-react';
+import { X, Plus, Trash2, Check, Sparkles, AlertCircle } from 'lucide-react';
 import { APP_LOGOS } from '../data/defaultData';
 
 export default function PromoModal({
@@ -9,6 +9,21 @@ export default function PromoModal({
   promo = null
 }) {
   const isEditing = Boolean(promo && promo.id);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen, onClose]);
 
   const [formData, setFormData] = useState({
     id: '',
@@ -141,9 +156,10 @@ export default function PromoModal({
 
   const handleRemoveApp = (index) => {
     if (formData.apps.length <= 1) {
-      alert('โปรโมชั่นต้องมีแอพอย่างน้อย 1 แอพ');
+      setErrorMessage('โปรโมชั่นต้องมีแอพอย่างน้อย 1 แอพ');
       return;
     }
+    setErrorMessage('');
     setFormData(prev => ({
       ...prev,
       apps: prev.apps.filter((_, i) => i !== index)
@@ -153,21 +169,25 @@ export default function PromoModal({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.promoPrice) {
-      alert('กรุณากรอกชื่อโปรโมชั่นและราคาโปรโมชั่น');
+      setErrorMessage('กรุณากรอกชื่อโปรโมชั่นและราคาโปรโมชั่น');
       return;
     }
 
     if (formData.apps.length === 0) {
-      alert('กรุณาเพิ่มแอพในโปรโมชั่นอย่างน้อย 1 แอพ');
+      setErrorMessage('กรุณาเพิ่มแอพในโปรโมชั่นอย่างน้อย 1 แอพ');
       return;
     }
 
+    setErrorMessage('');
     onSave(formData);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200"
+    >
       <div className="relative w-full max-w-2xl bg-white rounded-3xl p-5 sm:p-7 shadow-2xl border border-pink-100 my-8 max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
@@ -189,6 +209,13 @@ export default function PromoModal({
             สามารถรวมแอพในแพ็กเกจได้มากกว่า 2 แอพ (เช่น เซ็ต 3 แอพ, 4 แอพ หรือคอมโบตามใจชอบ)
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="mb-4 flex items-center gap-2 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium animate-in fade-in">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
